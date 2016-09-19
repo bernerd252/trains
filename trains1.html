@@ -158,7 +158,9 @@ database.ref().on("child_added", function(childSnapshot) {
     var frequencyParse = parseInt(childSnapshot.val().frequency)
     console.log(frequencyParse)
 
-    if (sinceFirstParse>0){
+    if (sinceFirstParse>=0){
+
+      var nextArrival = (childSnapshot.val().firstTrainTime)
 
      $('#trainNameDisplay').append(
         "<div >" +
@@ -189,18 +191,27 @@ database.ref().on("child_added", function(childSnapshot) {
            
         "</div>"
     );
+     $('#nextArrivalDisplay').append(
+        "<div >" +
+            "<span id='nextArrival'> " + nextArrival + " </span>" +
+            
+           
+        "</div>"
+    );
 
 
     }
+
+    if (sinceFirstParse<0){
 
     while (sinceFirstParse<0){
       sinceFirstParse=(sinceFirstParse+frequencyParse)
       console.log(sinceFirstParse)
-    }
+    
 
     var nextArrival = moment().add(sinceFirstParse, "minutes").format("HH:mm");
     console.log(nextArrival)
-
+}
 
    
 
@@ -241,6 +252,7 @@ database.ref().on("child_added", function(childSnapshot) {
            
         "</div>"
     );
+    }
        }, function(errorObject){
     console.log("Errors handled: " + errorObject.code)
 });
