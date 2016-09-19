@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Train Times</title>
+    <!-- We need to bring in the bootstrap CSS -->
+    <!-- Latest compiled and minified CSS -->
+  <script src='http://code.jquery.com/jquery-2.1.3.min.js'></script>
+
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+      <div class="page-header img-rounded">
+        <h1>Train Times<br><small class="underheading">Get on the right track...</small></h1>
+      </div>
+    </div>
+    <div class="row">
+       <table class="table" id="employeeData" class ="img-rounded">
+      <thead>
+      
+        <tr>
+        <h3 class="tableheading img-rounded">Train Schedule
+          <th >Train Name</th>
+          <th >Destination</th>
+          <th>Frequency (mins)</th>
+          <th >Next Arrival</th>
+          <th >Minutes Away</th>
+        </tr>
+        </h3>
+      </thead>
+      <tbody>
+        <tr >
+          <td id="trainNameDisplay"></td> 
+          <td id="destinationDisplay"></td> 
+          <td id="frequencyDisplay"></td>
+          <td id="nextArrivalDisplay"></td> 
+          <td id="minutesAwayDisplay"></td>   
+        </tr>
+        
+        
+      </tbody>
+    </table>
+    </div>
+    <div class = "row">
+      <form>
+  <div class="form-group">
+  <h3 class="tableheading img-rounded"> Add Train</h3>
+    <label for="trainName">Train Name</label>
+    <input type="text" class="form-control" id="trainNameInput" aria-describedby="trainNameHelp" placeholder="Train Name">
+    
+  </div>
+  <div class="form-group">
+    <label for="destination">Destination</label>
+    <input type="text" class="form-control" id="destinationInput" aria-describedby="destinationHelp" placeholder="Destination">
+    
+  </div>
+  <div class="form-group">
+     <label for="firstTrainTime">First Train Time</label>
+    <input type="text" class="form-control" id="firstTrainTimeInput" aria-describedby="firstTrainTimeHelp" placeholder="First Train Time">
+      
+    </select>
+  </div>
+  <div class="form-group">
+     <label for="frequency">Frequency in mins</label>
+    <input type="text" class="form-control" id="frequencyInput" aria-describedby="frequencyHelp" placeholder="Frequency in mins">
+  </div>
+  
+  <button type="submit" class="btn blue" id="clickButton">Submit</button>
+</form>
+    </div>
+  </div>
+
+<script src="https://www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCGqzLvPRTJiBESmSpeqObvQyppfDz-nNs",
+    authDomain: "trains1-50c63.firebaseapp.com",
+    databaseURL: "https://trains1-50c63.firebaseio.com",
+    storageBucket: "",
+    messagingSenderId: "527739030026"
+  };
+  firebase.initializeApp(config);
+
+  
+
+   var database = firebase.database();
+
+  var trainName = "";
+  var destination = "";
+  var firstTrainTime = "";
+  var frequency = "";
+
+   $("#clickButton").on("click", function(){
+
+    trainName = $('#trainNameInput').val().trim(); 
+    destination = $('#destinationInput').val().trim(); 
+    firstTrainTime = $('#firstTrainTimeInput').val().trim();
+    frequency = $("#frequencyInput").val().trim();
+   ;
+   console.log("firstTrainTime " + firstTrainTime)
+  database.ref().push({
+      trainName: trainName,
+      destination: destination,
+      firstTrainTime: firstTrainTime,
+      frequency: frequency,
+      dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    alert("Train successfully added");
+
+    console.log(trainName)
+    console.log(destination)
+    console.log(firstTrainTime)
+    console.log(frequency)
+
+    return false;
+  });
+database.ref().on("child_added", function(childSnapshot) {
+
+    console.log(childSnapshot.val().trainName);
+    console.log(childSnapshot.val().destination);
+    console.log(childSnapshot.val().firstTrainTime);
+    console.log(childSnapshot.val().frequency);
+
+    var dateToday = moment().format("MM/DD/YY ");
+    console.log("dateToday " + dateToday);
+
+    var firstTrainToday = (dateToday)+(childSnapshot.val().firstTrainTime);
+    console.log("firstTrainToday "  + firstTrainToday);
+
+    var convertedDate = moment(new Date(firstTrainToday));
+    console.log(convertedDate);
+
+    var sinceFirst = (moment(convertedDate).diff( moment(), "minutes"));
+    console.log(sinceFirst);
+
+    var sinceFirstParse = parseInt(sinceFirst);
+    console.log(sinceFirstParse)
+
+    var frequencyParse = parseInt(childSnapshot.val().frequency)
+    console.log(frequencyParse)
+
+    if (sinceFirstParse>0){
+
+     $('#trainNameDisplay').append(
+        "<div >" +
+            "<span id='trainName'> " + childSnapshot.val().trainName + " </span>" +
+            
+           
+        "</div>"
+    );
+     $('#destinationDisplay').append(
+        "<div >" +
+            "<span id='destination'> " + childSnapshot.val().destination + " </span>" +
+            
+           
+        "</div>"
+    );
+     $('#frequencyDisplay').append(
+        "<div >" +
+            "<span id='frequency'> " + childSnapshot.val().frequency + " </span>" +
+            
+           
+        "</div>"
+    );
+     
+     $('#minutesAwayDisplay').append(
+        "<div >" +
+            "<span id='minutesAway'> " + sinceFirstParse + " </span>" +
+            
+           
+        "</div>"
+    );
+
+
+    }
+
+    while (sinceFirstParse<0){
+      sinceFirstParse=(sinceFirstParse+frequencyParse)
+      console.log(sinceFirstParse)
+    }
+
+    var nextArrival = moment().add(sinceFirstParse, "minutes").format("HH:mm");
+    console.log(nextArrival)
+
+
+   
+
+     $('#trainNameDisplay').append(
+        "<div >" +
+            "<span id='trainName'> " + childSnapshot.val().trainName + " </span>" +
+            
+           
+        "</div>"
+    );
+     $('#destinationDisplay').append(
+        "<div >" +
+            "<span id='destination'> " + childSnapshot.val().destination + " </span>" +
+            
+           
+        "</div>"
+    );
+     $('#frequencyDisplay').append(
+        "<div >" +
+            "<span id='frequency'> " + childSnapshot.val().frequency + " </span>" +
+            
+           
+        "</div>"
+    );
+     
+     $('#minutesAwayDisplay').append(
+        "<div >" +
+            "<span id='minutesAway'> " + sinceFirstParse + " </span>" +
+            
+           
+        "</div>"
+    );
+
+      $('#nextArrivalDisplay').append(
+        "<div >" +
+            "<span id='nextArrival'> " + nextArrival + " </span>" +
+            
+           
+        "</div>"
+    );
+       }, function(errorObject){
+    console.log("Errors handled: " + errorObject.code)
+});
+
+</script>
