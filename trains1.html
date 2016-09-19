@@ -27,13 +27,13 @@
     <div class="container">
         <div class="row">
       <div class="page-header img-rounded">
-        <h1>Train Times<br><small class="underheading">Get on the right track...</small></h1>
+        <h1 class="header">Train Times<br><small class="underheading">Get on the right track...</small></h1>
       </div>
     </div>
     <div class="row">
        <table class="table" id="employeeData" class ="img-rounded">
       <thead>
-      
+      <button type="button" class="btn red" id="clickclickButton">Travel Alerts</button>
         <tr>
         <h3 class="tableheading img-rounded">Train Schedule
           <th >Train Name</th>
@@ -107,6 +107,10 @@
   var destination = "";
   var firstTrainTime = "";
   var frequency = "";
+
+  $("#clickclickButton").on("click", function(){
+    alert("Probably running Hella late");
+  });
 
    $("#clickButton").on("click", function(){
 

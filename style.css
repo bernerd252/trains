@@ -1,0 +1,28 @@
+.page-header{
+	background-color: darkred;
+	text-align: center;
+}
+
+.header{
+	color: white;
+	padding-top: 2%;
+}
+
+.underheading{
+	color: lightgrey;
+}
+
+.red{
+	background-color: red;
+}
+
+.tableheading{
+	background-color: slateblue;
+	padding: 1%;
+	color: white;
+}
+
+.blue {
+	background-color: slateblue;
+	color: white;
+}
