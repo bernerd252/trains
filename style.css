@@ -1,3 +1,7 @@
+body{
+	background-color: lightgrey;
+}
+
 .page-header{
 	background-color: darkred;
 	text-align: center;
@@ -25,4 +29,8 @@
 .blue {
 	background-color: slateblue;
 	color: white;
+}
+
+#employeeData{
+	background-color: white;
 }
